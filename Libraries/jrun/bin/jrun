@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Get the canonical path to home directory
+ 
+BINDIR="`dirname $0`"
+if [ "${BINDIR:0:1}" != "/" ]; then
+  BINDIR=${PWD}/${BINDIR}
+fi
+
+cd ${BINDIR}/..
+INSTALLDIR="${PWD}"
+cd - > /dev/null
+
+# Find the various directories
+BINDIR="${INSTALLDIR}/bin"
+LIBDIR="${INSTALLDIR}/lib"
+
+# Java properties
+
+JAR_PATH="-jar ${LIBDIR}/jrunner.jar"
+MAX_HEAP_SIZE=-Xmx256M
+
+if [ "$#" -eq "1" ]; then
+  java ${MAX_HEAP_SIZE} ${JAR_PATH} $1
+else
+  echo "Usage: jrun JULFILE"
+fi

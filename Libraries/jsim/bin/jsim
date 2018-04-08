@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# Get the canonical path to home directory
+ 
+BINDIR="`dirname $0`"
+if [ "${BINDIR:0:1}" != "/" ]; then
+  BINDIR=${PWD}/${BINDIR}
+fi
+
+cd ${BINDIR}/..
+INSTALLDIR="${PWD}"
+cd - > /dev/null
+
+# Find the various directories
+BINDIR="${INSTALLDIR}/bin"
+LIBDIR="${INSTALLDIR}/lib"
+EXTDIR="${INSTALLDIR}/ext"
+
+# Identify cygwin
+if [ "${OS}" == "Windows_NT" ]; then
+  CYGWIN=true;
+fi
+
+# Java properties
+if [ -z ${CYGWIN} ]; then
+  JSIM_CLASSPATH="-cp ${LIBDIR}/jsim.jar"
+else
+  JSIM_CLASSPATH="-cp `cygpath -wp ${LIBDIR}/jsim.jar`"
+fi
+
+for JAR in "${EXTDIR}/*.jar"; do
+  if [ -z ${CYGWIN} ]; then
+    JSIM_CLASSPATH="${JSIM_CLASSPATH}:$JAR"
+  else
+    JSIM_CLASSPATH="${JSIM_CLASSPATH};`cygpath -wp ${JAR}`"
+  fi
+done
+
+INSTALL_DIR_PROPERTY="-Dinstall.dir=${INSTALLDIR}"
+MAX_HEAP_SIZE=-Xmx256M
+
+if [ "$#" -ge "1" ]; then
+  java ${MAX_HEAP_SIZE} ${JSIM_CLASSPATH} ${INSTALL_DIR_PROPERTY} laser.juliette.driver.Driver $*
+else
+  echo "Usage: jsim JULFILE"
+fi
