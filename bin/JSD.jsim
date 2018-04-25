@@ -1,0 +1,28 @@
+<simulation>
+	<rules>
+		<posted>
+			<start>
+				<fixed value="1" />
+			</start>
+		</posted>
+	<step name="Initial Model Phase">
+		<started>
+			<group>
+				<complete>
+					<fixed value="1" />
+				</complete>
+			</group>
+			<group>
+				<terminate>
+						<fixed value="1" />
+				</terminate>
+			</group>
+		</started>
+	</step>
+		<started>
+			<complete>
+				<fixed value="1" />
+			</complete>
+		</started>
+	</rules>
+</simulation>
